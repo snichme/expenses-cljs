@@ -2,17 +2,24 @@
   (:require
    [om.core :as om :include-macros true]
    [om.dom :as dom :include-macros true]
-   [expenses.calc :refer [sum-expenses mean-expense pay]]))
+   [expenses.calc :refer [sum-expenses mean-expense pay]])
+  (:import [goog.i18n NumberFormat]))
 
 (defn round [d x]
   (let [c (reduce #(* 10 %) (range 1 (+ d 2)))]
     (/ (js/Math.round (* x c)) c)))
 
+
+(def formatter (NumberFormat. (.-CURRENCY (.-Format NumberFormat))))
+
+(defn format [value]
+  (.format formatter value))
+
 (defn format-payment [payment]
   (str
    (:name payment)
    " should pay "
-   (round 2 (:amount payment))
+   (format (round 2 (:amount payment)))
    " to "
    (:reciver payment)))
 
@@ -27,7 +34,7 @@
 (defn payments-table-row [payment]
   (dom/tr nil
           (dom/td nil (:name payment))
-          (dom/td nil (round 2 (:amount payment)))
+          (dom/td nil (format (round 2 (:amount payment))))
           (dom/td nil (:reciver payment))))
 
 (defn payments-as-table [payments owner]
