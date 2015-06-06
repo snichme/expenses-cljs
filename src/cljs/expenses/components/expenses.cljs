@@ -43,7 +43,7 @@
                                   :className "expenses__addbutton"
                                   } "Add expense"))))))
 
-(defn expenses [exps comm]
+(defn expenses [exps]
   (dom/div #js {:className "expenses"}
            (dom/h3 #js {:className "expenses__header"} "Expenses")
            (om/build add-expense-button exps)
